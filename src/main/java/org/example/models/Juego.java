@@ -6,21 +6,26 @@ import org.example.utils.JuegoUtils;
 import java.util.Locale;
 
 public class Juego {
-    public static final float MAXPRICE = 200;
-    public static final float MINPRICE = 0;
+    public static final float MAX_PRICE = 200;
+    public static final float MIN_PRICE = 0;
 
     private String title;
     private Consolas console;
     private float price;
+
+    public Juego() {
+
+    }
 
     public Juego(String title, Consolas console, float price) {
         setTitle(title);
         setConsole(console);
         setPrice(price);
     }
+
     public Juego(String title, String console, float price) {
         setTitle(title);
-        setConsole(Consolas.valueOf(console.toUpperCase(Locale.ROOT)));
+        setConsole(Consolas.valueOfConsole(console.toUpperCase(Locale.ROOT)));
         setPrice(price);
     }
 
@@ -29,6 +34,8 @@ public class Juego {
     }
 
     public void setTitle(String title) {
+        if (title == null || title.trim().equals(""))
+            throw new JuegoException("Title cannot be null or empty");
         this.title = title;
     }
 
@@ -40,13 +47,18 @@ public class Juego {
         this.console = console;
     }
 
+    public void setConsole(String console) {
+        Consolas consoleEnum = Consolas.valueOfConsole(console);
+        this.console = consoleEnum;
+    }
+
     public float getPrice() {
         return price;
     }
 
     public void setPrice(float price) {
-        if(!JuegoUtils.isInRange(price,MINPRICE,MAXPRICE))
-            throw new JuegoException(String.format("Price must be between %2g and %2g",MINPRICE,MAXPRICE));
+        if (!JuegoUtils.isInRange(price, MIN_PRICE, MAX_PRICE))
+            throw new JuegoException(String.format("Price must be between %.2f and %.2f", MIN_PRICE, MAX_PRICE));
         this.price = price;
     }
 }

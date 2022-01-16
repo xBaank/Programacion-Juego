@@ -9,4 +9,6 @@ public class JuegoUtils {
     public static boolean isInRange(float number,float from, float to) {
         return number >= from && number <= to;
     }
+
+
 }
