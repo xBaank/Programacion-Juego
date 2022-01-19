@@ -45,9 +45,9 @@ public class Tienda {
     }
 
     public ArrayList<JuegoStock> searchGames(Consolas console) {
-        ArrayList<Consolas> consolas = new ArrayList<>();
-        consolas.add(console);
-        return searchGames(null,consolas,JuegoStock.MIN_PRICE,JuegoStock.MAX_PRICE);
+        ArrayList<Consolas> consoles = new ArrayList<>();
+        consoles.add(console);
+        return searchGames(null, consoles,JuegoStock.MIN_PRICE,JuegoStock.MAX_PRICE);
 
     }
 
@@ -66,7 +66,6 @@ public class Tienda {
     }
 
     private List<JuegoStock> getResults(String title, List<Consolas> consoles, float minPrice, float maxPrice) {
-        List<JuegoStock> results;
         return getJuegos().stream().filter(i ->
                 (title == null || i.getTitle().toUpperCase(Locale.ROOT).contains(title.toUpperCase(Locale.ROOT))) &&
                 consoles.contains(i.getConsole()) &&
@@ -76,7 +75,6 @@ public class Tienda {
     }
 
     private List<JuegoStock> getOrder(String title) {
-        List<JuegoStock> results;
         return getJuegos().stream().sorted(Comparator.comparing(JuegoStock::getTitle)).collect(Collectors.toList());
     }
 

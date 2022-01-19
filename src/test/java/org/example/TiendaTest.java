@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class TiendaTest {
@@ -18,11 +20,19 @@ public class TiendaTest {
 
     @Test
     public void tiendaShouldSearchTitle() {
+        //Arrange
+        var title = gameToSearch.getTitle();
         //Act
-        JuegoStock gameSearched = tienda.searchGames(gameToSearch.getTitle())
-                .stream().findFirst().get();
+        ArrayList<JuegoStock> gamesSearched = tienda.searchGames(title);
+        boolean isGameSearched = true;
+        for (JuegoStock gameFound : gamesSearched) {
+            if(!gameFound.getTitle().toUpperCase(Locale.ROOT).contains(gameToSearch.getTitle().toUpperCase(Locale.ROOT))) {
+                isGameSearched = false;
+                break;
+            }
+        }
         //Assert
-        Assertions.assertEquals(gameSearched,gameToSearch);
+        Assertions.assertTrue(isGameSearched);
     }
 
     @Test
