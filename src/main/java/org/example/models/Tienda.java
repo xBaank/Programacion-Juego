@@ -1,6 +1,9 @@
 package org.example.models;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Tienda {
@@ -56,10 +59,22 @@ public class Tienda {
 
     }
 
-    public ArrayList<JuegoStock> orderGames() {
+    public ArrayList<JuegoStock> orderGames(OrderType orderType, OrderDir orderDir) {
         List<JuegoStock> results;
-        results = getJuegos().stream().sorted().collect(Collectors.toList());
-        if(results.size() > 0)
+        switch (orderType) {
+            case TITLE:
+                results = getJuegos().stream().sorted(Comparator.comparing(JuegoStock::getTitle)).collect(Collectors.toList());
+                break;
+            case PRICE:
+                results = getJuegos().stream().sorted(Comparator.comparing(JuegoStock::getPrice)).collect(Collectors.toList());
+                break;
+            case CONSOLE:
+                results = getJuegos().stream().sorted(Comparator.comparing(JuegoStock::getConsole)).collect(Collectors.toList());
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + orderType);
+        }
+        if (results.size() > 0)
             return new ArrayList<>(results);
         else
             return new ArrayList<>();
