@@ -1,4 +1,4 @@
-package org.example.testData;
+package org.example.juegoData;
 
 public class consoleData {
     public static final String DEFINED_CONSOLE = "SWITCH";

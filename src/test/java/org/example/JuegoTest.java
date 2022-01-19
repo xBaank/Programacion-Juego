@@ -2,9 +2,9 @@ package org.example;
 
 import org.example.exceptions.JuegoException;
 import org.example.models.Juego;
-import org.example.testData.consoleData;
-import org.example.testData.priceData;
-import org.example.testData.titleData;
+import org.example.juegoData.consoleData;
+import org.example.juegoData.priceData;
+import org.example.juegoData.titleData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;

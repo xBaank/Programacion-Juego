@@ -2,13 +2,17 @@ package org.example.models;
 
 import org.example.exceptions.JuegoException;
 
-import java.util.Locale;
+import java.util.*;
 
 public enum Consolas {
     PC,
     XBOX,
     PLAY,
     SWITCH;
+
+    public static List<Consolas> valuesAsList() {
+        return Arrays.asList(values());
+    }
 
     /**
      * Gets the Enum value (case insensitive)
@@ -37,5 +41,11 @@ public enum Consolas {
             throw new JuegoException("Value is not defined in the enum");
         }
         return result;
+    }
+
+    public static Consolas getRandomValue() {
+        ArrayList<Consolas> consolas = new ArrayList<Consolas>(Arrays.asList(values()));
+        Random random = new Random();
+        return consolas.get(random.nextInt(consolas.size()));
     }
 }
