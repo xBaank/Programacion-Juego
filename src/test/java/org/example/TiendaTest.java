@@ -47,14 +47,8 @@ public class TiendaTest {
         //Act
         var gamesSearched = tienda.getGames().searchGames(minPrice, maxPrice);
         //Assert
-        boolean isPricesAreInRange = true;
-        for (JuegoStock juegoStock : gamesSearched) {
-            if(minPrice > juegoStock.getPrice() || maxPrice < juegoStock.getPrice()) {
-                isPricesAreInRange = false;
-                break;
-            }
-        }
-        Assertions.assertTrue(isPricesAreInRange);
+
+        Assertions.assertTrue(checkPrice(minPrice, maxPrice, gamesSearched));
     }
 
     @Test
@@ -72,20 +66,20 @@ public class TiendaTest {
         );
     }
 
-    @Test
-    public void tiendaShouldOrder() {
-        //Arrange
-        float maxPrice = gameToSearch.getPrice();
-        float minPrice = gameToSearch.getPrice();
-        //Act
-        var gamesSearched = tienda.getGames().searchGames(gameToSearch.getTitle(), gameToSearch.getConsole(), minPrice, maxPrice);
-        //Assert
-        Assertions.assertAll(
-                () -> Assertions.assertTrue(checkTitle(gameToSearch.getTitle(), gamesSearched)),
-                () -> Assertions.assertTrue(checkConsole(gameToSearch.getConsole(), gamesSearched)),
-                () -> Assertions.assertTrue(checkPrice(minPrice, maxPrice, gamesSearched))
-        );
-    }
+//    @Test
+//    public void tiendaShouldOrder() {
+//        //Arrange
+//        float maxPrice = gameToSearch.getPrice();
+//        float minPrice = gameToSearch.getPrice();
+//        //Act
+//        var gamesSearched = tienda.getGames().searchGames(gameToSearch.getTitle(), gameToSearch.getConsole(), minPrice, maxPrice);
+//        //Assert
+//        Assertions.assertAll(
+//                () -> Assertions.assertTrue(checkTitle(gameToSearch.getTitle(), gamesSearched)),
+//                () -> Assertions.assertTrue(checkConsole(gameToSearch.getConsole(), gamesSearched)),
+//                () -> Assertions.assertTrue(checkPrice(minPrice, maxPrice, gamesSearched))
+//        );
+//    }
 
     private boolean checkTitle(String title, ArrayList<JuegoStock> gamesSearched) {
         boolean isGameSearched = true;
