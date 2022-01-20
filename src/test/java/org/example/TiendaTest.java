@@ -1,9 +1,10 @@
 package org.example;
 
+import org.example.enums.Consolas;
+import org.example.generator.TiendaGenerator;
 import org.example.models.Juego;
 import org.example.models.JuegoStock;
 import org.example.models.Tienda;
-import org.example.utils.JuegoUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,16 +24,9 @@ public class TiendaTest {
         //Arrange
         var title = gameToSearch.getTitle();
         //Act
-        ArrayList<JuegoStock> gamesSearched = tienda.searchGames(title);
-        boolean isGameSearched = true;
-        for (JuegoStock gameFound : gamesSearched) {
-            if(!gameFound.getTitle().toUpperCase(Locale.ROOT).contains(gameToSearch.getTitle().toUpperCase(Locale.ROOT))) {
-                isGameSearched = false;
-                break;
-            }
-        }
+        ArrayList<JuegoStock> gamesSearched = tienda.getGames().searchGames(title);
         //Assert
-        Assertions.assertTrue(isGameSearched);
+        Assertions.assertTrue(checkTitle(gameToSearch.getTitle(), gamesSearched));
     }
 
     @Test
@@ -40,11 +34,9 @@ public class TiendaTest {
         //Arrange
         var console = gameToSearch.getConsole();
         //Act
-        var gamesSearched = tienda.searchGames(console);
-        var consolesFound = gamesSearched.stream().map(Juego::getConsole).distinct().collect(Collectors.toList());
+        var gamesSearched = tienda.getGames().searchGames(console);
         //Assert
-        boolean isConsoleFound = consolesFound.size() == 1 && consolesFound.stream().findFirst().get() == console;
-        Assertions.assertTrue(isConsoleFound);
+        Assertions.assertTrue(checkConsole(console, gamesSearched));
     }
 
     @Test
@@ -53,7 +45,7 @@ public class TiendaTest {
         float maxPrice = 100;
         float minPrice = 50;
         //Act
-        var gamesSearched = tienda.searchGames(minPrice,maxPrice);
+        var gamesSearched = tienda.getGames().searchGames(minPrice, maxPrice);
         //Assert
         boolean isPricesAreInRange = true;
         for (JuegoStock juegoStock : gamesSearched) {
@@ -68,27 +60,64 @@ public class TiendaTest {
     @Test
     public void tiendaShouldSearch() {
         //Arrange
-        float maxPrice = 100;
-        float minPrice = 50;
+        float maxPrice = gameToSearch.getPrice();
+        float minPrice = gameToSearch.getPrice();
         //Act
-        var gamesSearched = tienda.searchGames(gameToSearch.getTitle(),gameToSearch.getConsole(),minPrice,maxPrice);
+        var gamesSearched = tienda.getGames().searchGames(gameToSearch.getTitle(), gameToSearch.getConsole(), minPrice, maxPrice);
         //Assert
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(checkTitle(gameToSearch.getTitle(), gamesSearched)),
+                () -> Assertions.assertTrue(checkConsole(gameToSearch.getConsole(), gamesSearched)),
+                () -> Assertions.assertTrue(checkPrice(minPrice, maxPrice, gamesSearched))
+        );
+    }
 
-        //Mover a funciones y hacer assert all para comprobar todos los campos
+    @Test
+    public void tiendaShouldOrder() {
+        //Arrange
+        float maxPrice = gameToSearch.getPrice();
+        float minPrice = gameToSearch.getPrice();
+        //Act
+        var gamesSearched = tienda.getGames().searchGames(gameToSearch.getTitle(), gameToSearch.getConsole(), minPrice, maxPrice);
+        //Assert
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(checkTitle(gameToSearch.getTitle(), gamesSearched)),
+                () -> Assertions.assertTrue(checkConsole(gameToSearch.getConsole(), gamesSearched)),
+                () -> Assertions.assertTrue(checkPrice(minPrice, maxPrice, gamesSearched))
+        );
+    }
+
+    private boolean checkTitle(String title, ArrayList<JuegoStock> gamesSearched) {
+        boolean isGameSearched = true;
+        for (JuegoStock gameFound : gamesSearched) {
+            if (!gameFound.getTitle().toUpperCase(Locale.ROOT).contains(title.toUpperCase(Locale.ROOT))) {
+                isGameSearched = false;
+                break;
+            }
+        }
+        return isGameSearched;
+    }
+
+    private boolean checkConsole(Consolas console, ArrayList<JuegoStock> gamesSearched) {
+        var consolesFound = gamesSearched.stream().map(Juego::getConsole).distinct().collect(Collectors.toList());
+        return consolesFound.size() == 1 && consolesFound.stream().findFirst().get() == console;
+    }
+
+    private boolean checkPrice(float minPrice, float maxPrice, ArrayList<JuegoStock> gamesSearched) {
         boolean isPricesAreInRange = true;
         for (JuegoStock juegoStock : gamesSearched) {
-            if(minPrice > juegoStock.getPrice() || maxPrice < juegoStock.getPrice()) {
+            if (minPrice > juegoStock.getPrice() || maxPrice < juegoStock.getPrice()) {
                 isPricesAreInRange = false;
                 break;
             }
         }
-        Assertions.assertTrue(isPricesAreInRange);
+        return isPricesAreInRange;
     }
 
     @BeforeEach
     public void reset() {
-        tienda = JuegoUtils.generateShop(TIENDA_GAMES_COUNT);
-        int index = JuegoUtils.getRandomInt(TIENDA_GAMES_COUNT);
-        gameToSearch = tienda.getJuegos().get(index);
+        tienda = TiendaGenerator.generateShop(TIENDA_GAMES_COUNT);
+        int index = TiendaGenerator.getRandomInt(TIENDA_GAMES_COUNT);
+        gameToSearch = tienda.getGames().get(index);
     }
 }

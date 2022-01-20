@@ -1,5 +1,6 @@
 package org.example.models;
 
+import org.example.enums.Consolas;
 import org.example.exceptions.JuegoException;
 import org.example.utils.JuegoUtils;
 
