@@ -42,6 +42,11 @@ public class ArrayListGames extends ArrayList<JuegoStock> {
 
     }
 
+    public ArrayListGames searchGames(List<Consolas> consoles) {
+        return searchGames(null, consoles, JuegoStock.MIN_PRICE, JuegoStock.MAX_PRICE);
+
+    }
+
     public ArrayListGames searchGames(float minPrice, float maxPrice) {
         return searchGames(null, Consolas.valuesAsList(), minPrice, maxPrice);
 
